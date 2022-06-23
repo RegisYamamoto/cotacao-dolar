@@ -11,11 +11,10 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Set;
 
 import org.coopersystem.client.CotacaoService;
-import org.coopersystem.model.CotacaoDolarDia;
 import org.coopersystem.model.CotacaoDolarDiaResponse;
+import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 @Path("/cotacoes")
@@ -28,24 +27,26 @@ public class CotacaoResource {
     CotacaoService cotacaoService;
 
     @GET
-    @Path("/{dataCotacao}")
     @Transactional
-    public CotacaoDTO buscar(@PathParam("dataCotacao") String dataCotacaoRequest) {
+    @Path("/{dataCotacao}")
+    @Operation(description = "Api que recebe uma data no formato MM-DD-YYYY e retorna a cotação do dolar da data recebida")
+    public CotacaoDTO buscar(@PathParam("dataCotacao") String dataCotacaoRequest) throws CotacaoNotFoundException {
         // busca cotacao na api externa
         CotacaoDolarDiaResponse cotacaoDolarDiaResponse = cotacaoService.getByDataCotacao("'" + dataCotacaoRequest + "'");
 
-        if (cotacaoDolarDiaResponse.getValue().size() != 0) {
-            LocalDateTime dataRequisicao = LocalDateTime.now();
-
-            // salva no banco de dados
-            Cotacao.persist(cotacaoBuilder(cotacaoDolarDiaResponse, dataCotacaoRequest, dataRequisicao));
-
-            // busca no banco de dados
-            Cotacao result = Cotacao.findByDataRequisicao(dataRequisicao);
-
-            return parseObjectToDTO(result);
+        if (cotacaoDolarDiaResponse.getValue().size() == 0) {
+            throw new CotacaoNotFoundException("Cotacao nao encontrada");
         }
-        return new CotacaoDTO();
+
+        LocalDateTime dataRequisicao = LocalDateTime.now();
+
+        // salva no banco de dados
+        Cotacao.persist(cotacaoBuilder(cotacaoDolarDiaResponse, dataCotacaoRequest, dataRequisicao));
+
+        // busca no banco de dados
+        Cotacao result = Cotacao.findByDataRequisicao(dataRequisicao);
+
+        return parseObjectToDTO(result);
     }
 
     public Cotacao cotacaoBuilder(CotacaoDolarDiaResponse cotacaoDolarDiaResponse, String dataCotacaoRequest, LocalDateTime dataRequisicao) {
