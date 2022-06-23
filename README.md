@@ -1,15 +1,24 @@
-# cotacao-dolar Project
+# história
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+Eu como responsável pelo projeto de cotações
+Quero que seja possível consultar cotações do dolar
+Para que eu possa precificar os produtos de minha loja
 
-If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
-## Running the application in dev mode
+## Visão de implementação
 
-You can run your application in dev mode that enables live coding using:
-```shell script
-./mvnw compile quarkus:dev
-```
+- Criar projeto em quarkus com o nome de "cotacao-dolar"
+- Criar endpoint GET que receba a data da cotação desejada por parametro
+- Criar client para buscar a cotação na api pública do governo https://dadosabertos.bcb.gov.br/dataset/dolar-americano-usd-todos-os-boletins-diarios
+- Salvar os dados retornados da api https://dadosabertos.bcb.gov.br/dataset/dolar-americano-usd-todos-os-boletins-diarios no banco Postgres, tabela "cotacao"
+- Retornar DTO com os seguintes campos:
+    id da requisição
+    timestamp da requisição
+    Data da cotação do dólar (data da cotação solicitada e não a data da requisição)
+    Cotação de compra
+    Cotação de venda
+    Data e Hora da Cotação
+- Criar testes unitários
 
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
 
