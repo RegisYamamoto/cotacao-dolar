@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.xml.transform.Result;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -30,7 +32,7 @@ public class CotacaoResource {
     @Transactional
     @Path("/{dataCotacao}")
     @Operation(description = "Api que recebe uma data no formato MM-DD-YYYY e retorna a cotação do dolar da data recebida")
-    public CotacaoDTO buscar(@PathParam("dataCotacao") String dataCotacaoRequest) throws CotacaoNotFoundException {
+    public Response buscar(@PathParam("dataCotacao") String dataCotacaoRequest) throws CotacaoNotFoundException {
         // busca cotacao na api externa
         CotacaoDolarDiaResponse cotacaoDolarDiaResponse = cotacaoService.getByDataCotacao("'" + dataCotacaoRequest + "'");
 
@@ -46,7 +48,7 @@ public class CotacaoResource {
         // busca no banco de dados
         Cotacao result = Cotacao.findByDataRequisicao(dataRequisicao);
 
-        return parseObjectToDTO(result);
+        return Response.ok(parseObjectToDTO(result)).build();
     }
 
     public Cotacao cotacaoBuilder(CotacaoDolarDiaResponse cotacaoDolarDiaResponse, String dataCotacaoRequest, LocalDateTime dataRequisicao) {

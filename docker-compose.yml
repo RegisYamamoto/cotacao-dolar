@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  quarkus-service:
+    build:
+      context: .
+      dockerfile: src/main/docker/Dockerfile.jvm
+    image: regis/cotacao-dolar:1.0
+    environment:
+      - DB_DATASOURCE_URL=jdbc:postgresql://quarkus-db:5432/cotacao
+      - DB_PASSWORD=quarkus
+      - DB_USERNAME=quarkus
+    ports:
+      - "8080:8080"
+    depends_on:
+      - quarkus-db
+    networks:
+      - quarkus
+
+  quarkus-db:
+    image: "postgres:14"
+    environment:
+      - POSTGRES_USER=quarkus
+      - POSTGRES_PASSWORD=quarkus
+      - POSTGRES_DB=cotacao
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d cotacao -p 5432 -U quarkus"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+    ports:
+      - "5432:5432"
+    networks:
+      - quarkus
+
+networks:
+  quarkus:
+    driver: bridge
