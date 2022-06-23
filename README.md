@@ -12,12 +12,12 @@ Para que eu possa precificar os produtos de minha loja
 - Criar client para buscar a cotação na api pública do governo https://dadosabertos.bcb.gov.br/dataset/dolar-americano-usd-todos-os-boletins-diarios
 - Salvar os dados retornados da api https://dadosabertos.bcb.gov.br/dataset/dolar-americano-usd-todos-os-boletins-diarios no banco Postgres, tabela "cotacao"
 - Retornar DTO com os seguintes campos:
-    id da requisição
-    timestamp da requisição
-    Data da cotação do dólar (data da cotação solicitada e não a data da requisição)
-    Cotação de compra
-    Cotação de venda
-    Data e Hora da Cotação
+    id da requisição,
+    timestamp da requisição,
+    Data da cotação do dólar (data da cotação solicitada e não a data da requisição),
+    Cotação de compra,
+    Cotação de venda,
+    Data e Hora da Cotação,
 - Criar testes unitários
 
 > **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
