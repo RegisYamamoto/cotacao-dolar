@@ -32,12 +32,12 @@ public class CotacaoResource {
     @Transactional
     @Path("/{dataCotacao}")
     @Operation(description = "Api que recebe uma data no formato MM-DD-YYYY e retorna a cotação do dolar da data recebida")
-    public Response buscar(@PathParam("dataCotacao") String dataCotacaoRequest) throws CotacaoNotFoundException {
+    public Response buscar(@PathParam("dataCotacao") String dataCotacaoRequest) throws NotFoundException {
         // busca cotacao na api externa
         CotacaoDolarDiaResponse cotacaoDolarDiaResponse = cotacaoService.getByDataCotacao("'" + dataCotacaoRequest + "'");
 
         if (cotacaoDolarDiaResponse.getValue().size() == 0) {
-            throw new CotacaoNotFoundException("Cotacao nao encontrada");
+            throw new NotFoundException("Cotacao nao encontrada");
         }
 
         LocalDateTime dataRequisicao = LocalDateTime.now();
